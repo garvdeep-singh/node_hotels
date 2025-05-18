@@ -12,9 +12,6 @@ dotenv.config();
 
 
 
-
-
-
 app.use(passport.initialize());
 
 
@@ -73,14 +70,3 @@ app.listen(PORT,() => {
 
 
 
-// const data = req.body;
-//   const newPerson=new Person(data);
-//   newPerson.save((error,savedperson)=>{
-//     if(error){
-//       console.log("Error is coming");
-//       res.status(500).json(error,"Internal server error");
-//     }else{
-//       console.log("Data saved successfully");
-//       res.status(200).json(savedperson);
-//     }
-//   })
