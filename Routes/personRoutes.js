@@ -1,9 +1,10 @@
 import express from 'express'
 import Person from './../models/person.js';
 const router = express.Router()
+import jwtAuthMiddleware from './../jwt.js';
+import generateToken from './../jwt.js';
 
-
-router.post('/', async (req, res) => {
+router.post('/signup', async (req, res) => {
   try {
     // const data = req.body;
     // const newPerson=new Person(data);
@@ -12,7 +13,16 @@ router.post('/', async (req, res) => {
     const newPerson=new Person(data);
     const response = await newPerson.save()
     console.log("Data saved");
-    res.status(200).json(response);
+
+    const payload = {
+      id: response.id,
+      username: response.username
+    };
+    const token = generateToken(payload);
+
+    // console.log(payload);
+    console.log("Token generated is ", token);
+    res.status(200).json({response: response, token: token});
 
   } catch (error) {
     res.status(400).send({ error: 'Failed to create person'});
@@ -20,6 +30,29 @@ router.post('/', async (req, res) => {
   
 })
 
+//Login route
+router.post('/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const user = await Person.findOne({ usrname:username });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid username or password' });
+    }
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid username or password' });
+    }
+    const payload = {
+      id: user.id,
+      username: user.username
+    };
+    const token = generateToken(payload);
+    res.status(200).json({ token });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+)
 
 //GET method to get the persons data
 

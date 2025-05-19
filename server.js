@@ -54,7 +54,8 @@ app.get('/item', (req, res) => {
 
 // const personRoutes = require('./Routes/personRoutes.js');
 import personRoutes from './Routes/personRoutes.js';
-app.use('/person',localauthmiddleware, personRoutes);
+// app.use('/person',localauthmiddleware, personRoutes);
+app.use('/person', personRoutes);
 
 import menuItemRoutes from './Routes/menuItemRoutes.js';
 app.use('/menuItem', menuItemRoutes);
